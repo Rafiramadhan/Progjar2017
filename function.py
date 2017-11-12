@@ -96,7 +96,7 @@ class Auth (threading.Thread) :
                          msg="Public : Pesan dari " + self.temp + " : " + kata[1]
                          target.send(msg.encode())
                  self.conn.send(b"Berhasil dikirim")
-             elif kata[0]== 'LISTGROUP':
+             elif kata[0]== 'GROUPLIST':
                 if logged == 1:
                     self.lock.acquire()
                     nama = self.group.keys()
