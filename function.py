@@ -52,35 +52,35 @@ class Auth (threading.Thread) :
         while (1):
              ask = self.conn.recv(1024).decode()
              kata = ask.split(' ',2)
-             if kata[0]== 'MASUK' and logged == 0 :
+             if kata[0]== 'LOGIN' and logged == 0 :
                  self.lock.acquire()
                  if kata[1] in self.user:
                     if kata[2] == self.user[kata[1]]:
                         self.onlinelist[kata[1]]=self.conn
                         logged = 1
                         self.temp=kata[1]
-                        print("\nBerhasil Masuk!")
+                        print("\nUser "+kata[1] " Berhasil Masuk!")
                         self.conn.send(b"Berhasil")
                  self.lock.release()
-             elif kata[0]== 'DAFTAR' and logged == 0 :
+             elif kata[0]== 'SIGNUP' and logged == 0 :
                  self.user[kata[1]] = kata[2]
                  self.lock.acquire()
                  file = open('userlist.txt','a')
                  toWrite = kata[1] + ' ' + kata[2] + '\n'
                  file.write(toWrite)
                  file.close()
-                 print("\nBerhasil Mendaftar!")
+                 print("\nBerhasil Mendaftar sebagai " + kata[1])
                  self.lock.release()
                  self.conn.send(b"berhasil")
-             elif kata[0]== 'ONLINE' and logged == 1 :
+             elif kata[0]== 'SHOWONLINE' and logged == 1 :
                  nama=self.onlinelist.keys()
                  nama2='\n'.join(nama)
                  self.conn.send(nama2.encode() + b"\n------------------")
-             elif kata[0]== 'KELUAR' and logged ==1 :
+             elif kata[0]== 'LOGOUT' and logged ==1 :
                  del self.onlinelist[self.temp]
                  self.conn.send(b"Terputus Koneksi")
                  break
-             elif kata[0]== 'CHAT':
+             elif kata[0]== 'WHISP':
                  if kata[1] in self.user and kata[1] != self.temp :
                      try :
                          target = self.onlinelist[kata[1]]
